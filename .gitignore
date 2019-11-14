@@ -1,0 +1,13 @@
+build
+build_refsol
+submission
+
+# Ignore subprojects imported by meson wrap
+subprojects/packagecache
+subprojects/googletest-release-*
+
+__pycache__
+.DS_Store
+*/.DS_Store
+
+*.zip

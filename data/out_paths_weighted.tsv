@@ -1,0 +1,6 @@
+(actor)--[movie#@year]-->(actor)--...
+(Robert Downey Jr.)--[Avengers: Endgame#@2019]-->(Chris Evans)
+(Amy Adams)--[The Woman in the Window#@2019]-->(Anthony Mackie)--[The Banker#@2019]-->(Nicholas Hoult)--[The True History of the Kelly Gang#@2019]-->(Russell Crowe)--[Boy Erased#@2018]-->(Nicole Kidman)
+(Will Smith)--[Spies in Disguise#@2019]-->(Ben Mendelsohn)--[Captain Marvel#@2019]-->(Samuel L. Jackson)--[Glass#@2019]-->(Bruce Willis)
+(James McAvoy)--[X-Men: Apocalypse#@2016]-->(Michael Fassbender)
+(Djimon Hounsou)--[King Arthur: Legend of the Sword#@2017]-->(Charlie Hunnam)--[Triple Frontier#@2019]-->(Oscar Isaac)--[The Addams Family#@2019]-->(Charlize Theron)--[Long Shot#@2019]-->(O'Shea Jackson Jr.)--[Den of Thieves#@2018]-->(50 Cent)

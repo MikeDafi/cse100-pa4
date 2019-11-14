@@ -1,0 +1,6 @@
+(actor)--[movie#@year]-->(actor)--...
+(Robert Downey Jr.)--[Avengers: Age of Ultron#@2015]-->(Chris Evans)
+(Amy Adams)--[Leap Year#@2010]-->(Matthew Goode)--[Stoker#@2013]-->(Nicole Kidman)
+(Will Smith)--[Gemini Man#@2019]-->(Clive Owen)--[Sin City#@2005]-->(Bruce Willis)
+(James McAvoy)--[X-Men: First Class#@2011]-->(Michael Fassbender)
+(Djimon Hounsou)--[Biker Boyz#@2003]-->(Derek Luke)--[Antwone Fisher#@2002]-->(Joy Bryant)--[Get Rich or Die Tryin'#@2005]-->(50 Cent)
