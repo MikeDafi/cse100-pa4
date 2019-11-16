@@ -1,4 +1,8 @@
 # C++ Starter Project for CSE100.
+
+Link to the documentation:
+https://docs.google.com/document/d/1jlMjXwhBlft2RrxcJBzGA6_a1O5T-R-iHzaA2YP9ryU/edit#
+
 This is a C++ starter project for CSE100. There are two ways of working on the PAs for this class: 
 1. Use the ieng6 lab machines. 
 2. Use a devcontainer on your own computer.
