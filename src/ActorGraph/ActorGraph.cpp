@@ -94,6 +94,69 @@ string ActorGraph::formatMovieAndYear(string movie, int year) {
            to_string(year) + MOVIE_RIGHT_BRACKET;
 }
 
+vector<string> ActorGraph::shortestWeightedPath(string firstActor,
+                                                string secondActor) {
+    vector<string> path;
+    vector<ActorNode*> nodesTouched;
+    // an actor doesn't exist
+    if (!checkIfActorExists(firstActor) || !checkIfActorExists(secondActor)) {
+        return path;
+    }
+
+    if (firstActor == secondActor) {
+        return path;
+    }
+
+    queue<ActorNode*> bfsQueue;
+    ActorNode* start = graph[firstActor];
+    start->dist = 0;
+    bfsQueue.push(start);
+    while (!bfsQueue.empty()) {
+        ActorNode* curr = bfsQueue.front();
+        bfsQueue.pop();
+        for (auto movieNameIterator = curr->edges.begin();
+             movieNameIterator != curr->edges.end(); movieNameIterator++) {
+            for (auto yearIterator = movieNameIterator->second.begin();
+                 yearIterator != movieNameIterator->second.end();
+                 yearIterator++) {
+                for (unsigned int i = 0; i < yearIterator->second.size(); i++) {
+                    ActorNode* adj = yearIterator->second.at(i);
+                    if (adj == NULL) {
+                        break;
+                    }
+                    if (adj->dist == INT_MAX) {
+                        nodesTouched.push_back(adj);
+                        adj->dist = curr->dist + 1;
+                        adj->prev = curr;
+                        adj->nameOfConnector = formatMovieAndYear(
+                            movieNameIterator->first, yearIterator->first);
+
+                        if (adj->nameOfActor == secondActor) {
+                            for (int i = adj->dist; i >= 1; i--) {
+                                path.push_back(adj->nameOfActor);
+                                path.push_back(adj->nameOfConnector);
+                                adj = adj->prev;
+                            }
+                            path.push_back(adj->nameOfActor);
+                            for (unsigned int i = 0; i < nodesTouched.size();
+                                 i++) {
+                                nodesTouched.at(i)->dist = INT_MAX;
+                            }
+                            return path;
+                        }
+
+                        bfsQueue.push(adj);
+                    }
+                }
+            }
+        }
+    }
+    for (unsigned int i = 0; i < nodesTouched.size(); i++) {
+        nodesTouched.at(i)->dist = INT_MAX;
+    }
+    return path;
+}
+
 vector<string> ActorGraph::shortestUnweightedPath(string firstActor,
                                                   string secondActor) {
     vector<string> path;

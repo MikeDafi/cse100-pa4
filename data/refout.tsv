@@ -1,6 +1,3 @@
 (actor)--[movie#@year]-->(actor)--...
 (Robert Downey Jr.)--[Captain America: Civil War#@2016]-->(Chris Evans)
 
-(Will Smith)--[Wild Wild West#@1999]-->(Kevin Kline)--[Darling Companion#@2012]-->(Dianne Wiest)--[Cookie#@1989]-->(Emily Lloyd)--[In Country#@1989]-->(Bruce Willis)
-
-

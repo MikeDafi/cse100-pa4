@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
     }
     ActorGraph* graph = new ActorGraph();
     graph->loadFromFile(argv[1], false);
-    cout << "Done from load file\n";
+
     bool isWeighted;
     if (*argv[2] == UNWEIGHTED_CHAR) {
         graph->buildUnweightedGraph();
@@ -127,7 +127,6 @@ int main(int argc, char** argv) {
     } else if (*argv[2] == WEIGHTED_CHAR) {
         isWeighted = true;
     }
-    cout << "Done from building graph";
 
     vector<string> test_pairs;
     test_pairs = getTestPairs(argv[3]);
