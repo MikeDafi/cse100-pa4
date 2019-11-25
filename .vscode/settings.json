@@ -6,6 +6,8 @@
         "cstddef": "cpp",
         "fstream": "cpp",
         "*.tcc": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "sstream": "cpp",
+        "ostream": "cpp"
     }
 }
