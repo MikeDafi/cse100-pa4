@@ -82,6 +82,8 @@ void findShortestPaths(const char* outFileName, vector<string> test_pairs,
         vector<string> returnedPath;
         bool traversor = false;
         if (useWeighted) {
+            returnedPath = graph->shortestWeightedPath(test_pairs.at(i),
+                                                       test_pairs.at(i + 1));
         } else {
             returnedPath = graph->shortestUnweightedPath(test_pairs.at(i),
                                                          test_pairs.at(i + 1));
@@ -122,11 +124,11 @@ int main(int argc, char** argv) {
 
     bool isWeighted;
     if (*argv[2] == UNWEIGHTED_CHAR) {
-        graph->buildUnweightedGraph();
         isWeighted = false;
     } else if (*argv[2] == WEIGHTED_CHAR) {
         isWeighted = true;
     }
+    graph->buildGraph();
 
     vector<string> test_pairs;
     test_pairs = getTestPairs(argv[3]);

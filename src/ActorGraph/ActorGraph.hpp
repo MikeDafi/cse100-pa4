@@ -41,8 +41,11 @@ class ActorGraph {
 
     bool checkIfActorExists(string actorName);
 
-    void buildUnweightedGraph();
+    void buildGraph();
     vector<string> shortestUnweightedPath(string firstActor,
+                                          string secondActor);
+
+    vector<string> shortestWeightedPath(string firstActor,
                                           string secondActor);
     // Maybe add some more methods here
 

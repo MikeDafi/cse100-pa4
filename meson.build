@@ -16,7 +16,7 @@ if not gtest_dep.found()
   error('MESON_SKIP_TEST: gtest not installed.')
 endif
 # === end test dependencies ===
-#subdir('test')
+subdir('test')
 
 
 # === custom commands ===

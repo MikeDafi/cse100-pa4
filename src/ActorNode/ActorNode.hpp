@@ -23,6 +23,7 @@ class ActorNode {
     string nameOfActor;
     int dist;
     ActorNode* prev;
+    bool done;
     string nameOfConnector;
     int priority;
 
@@ -32,7 +33,11 @@ class ActorNode {
 
     /* Constructor that initialize a HCNode */
     ActorNode(string actorName, string movieName, int movieYear)
-        : nameOfActor(actorName), dist(INT_MAX), prev(NULL), priority(0) {
+        : nameOfActor(actorName),
+          dist(INT_MAX),
+          done(false),
+          prev(NULL),
+          priority(0) {
         edges[movieName][movieYear].push_back(0);
     }
 
@@ -50,6 +55,21 @@ class ActorNode {
     //     stm << "[" << n.count << "," << (int)(n.symbol) << "]";
     //     return stm;
     // }
+};
+
+struct WeightedComparator {
+    bool operator()(ActorNode*& lhs, ActorNode*& rhs) const {
+        if (lhs->dist != rhs->dist) {
+            return rhs->dist < lhs->dist;
+        }
+
+        // if (rhs->nameOfActor.length() == lhs->nameOfActor.length()) {
+        if (rhs->nameOfActor.compare(lhs->nameOfActor) > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 };
 
 struct ActorNodePtrComp {

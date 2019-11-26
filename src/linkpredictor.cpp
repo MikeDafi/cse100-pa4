@@ -247,7 +247,7 @@ int main(int argc, char** argv) {
     }
     ActorGraph* graph = new ActorGraph();
     graph->loadFromFile(argv[1], false);
-    graph->buildUnweightedGraph();
+    graph->buildGraph();
 
     vector<string> listOfActors;
     listOfActors = getListOfActors(argv[2]);

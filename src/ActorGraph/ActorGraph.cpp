@@ -40,7 +40,7 @@ bool ActorGraph::checkIfActorExists(string actorName) {
     return false;
 }
 
-void ActorGraph::buildUnweightedGraph() {
+void ActorGraph::buildGraph() {
     for (auto movieIterator = movies.begin(); movieIterator != movies.end();
          movieIterator++) {
         for (auto yearIterator = movieIterator->second.begin();
@@ -94,6 +94,8 @@ string ActorGraph::formatMovieAndYear(string movie, int year) {
            to_string(year) + MOVIE_RIGHT_BRACKET;
 }
 
+int edgeWeight(int movieYear) { return 2019 - movieYear + 1; }
+
 vector<string> ActorGraph::shortestWeightedPath(string firstActor,
                                                 string secondActor) {
     vector<string> path;
@@ -107,45 +109,53 @@ vector<string> ActorGraph::shortestWeightedPath(string firstActor,
         return path;
     }
 
-    queue<ActorNode*> bfsQueue;
+    priority_queue<ActorNode*, vector<ActorNode*>, WeightedComparator> bfsQueue;
     ActorNode* start = graph[firstActor];
     start->dist = 0;
     bfsQueue.push(start);
     while (!bfsQueue.empty()) {
-        ActorNode* curr = bfsQueue.front();
+        ActorNode* curr = bfsQueue.top();
         bfsQueue.pop();
-        for (auto movieNameIterator = curr->edges.begin();
-             movieNameIterator != curr->edges.end(); movieNameIterator++) {
-            for (auto yearIterator = movieNameIterator->second.begin();
-                 yearIterator != movieNameIterator->second.end();
-                 yearIterator++) {
-                for (unsigned int i = 0; i < yearIterator->second.size(); i++) {
-                    ActorNode* adj = yearIterator->second.at(i);
-                    if (adj == NULL) {
-                        break;
-                    }
-                    if (adj->dist == INT_MAX) {
-                        nodesTouched.push_back(adj);
-                        adj->dist = curr->dist + 1;
-                        adj->prev = curr;
-                        adj->nameOfConnector = formatMovieAndYear(
-                            movieNameIterator->first, yearIterator->first);
-
-                        if (adj->nameOfActor == secondActor) {
-                            for (int i = adj->dist; i >= 1; i--) {
-                                path.push_back(adj->nameOfActor);
-                                path.push_back(adj->nameOfConnector);
-                                adj = adj->prev;
-                            }
-                            path.push_back(adj->nameOfActor);
-                            for (unsigned int i = 0; i < nodesTouched.size();
-                                 i++) {
-                                nodesTouched.at(i)->dist = INT_MAX;
-                            }
-                            return path;
+        if (curr->done == false) {
+            curr->done = true;
+            for (auto movieNameIterator = curr->edges.begin();
+                 movieNameIterator != curr->edges.end(); movieNameIterator++) {
+                for (auto yearIterator = movieNameIterator->second.begin();
+                     yearIterator != movieNameIterator->second.end();
+                     yearIterator++) {
+                    for (unsigned int i = 0; i < yearIterator->second.size();
+                         i++) {
+                        ActorNode* adj = yearIterator->second.at(i);
+                        if (adj == NULL) {
+                            break;
                         }
+                        int distance =
+                            curr->dist + edgeWeight(yearIterator->first);
+                        if (distance < adj->dist) {
+                            nodesTouched.push_back(adj);
+                            adj->dist = distance;
+                            adj->prev = curr;
+                            adj->nameOfConnector = formatMovieAndYear(
+                                movieNameIterator->first, yearIterator->first);
 
-                        bfsQueue.push(adj);
+                            if (adj->nameOfActor == secondActor) {
+                                while (adj->prev != NULL) {
+                                    path.push_back(adj->nameOfActor);
+                                    path.push_back(adj->nameOfConnector);
+                                    adj = adj->prev;
+                                }
+                                path.push_back(adj->nameOfActor);
+                                for (unsigned int i = 0;
+                                     i < nodesTouched.size(); i++) {
+                                    nodesTouched.at(i)->dist = INT_MAX;
+                                    nodesTouched.at(i)->done = false;
+                                    nodesTouched.at(i)->prev = NULL;
+                                }
+                                return path;
+                            }
+
+                            bfsQueue.push(adj);
+                        }
                     }
                 }
             }
@@ -153,6 +163,8 @@ vector<string> ActorGraph::shortestWeightedPath(string firstActor,
     }
     for (unsigned int i = 0; i < nodesTouched.size(); i++) {
         nodesTouched.at(i)->dist = INT_MAX;
+        nodesTouched.at(i)->done = false;
+        nodesTouched.at(i)->prev = NULL;
     }
     return path;
 }

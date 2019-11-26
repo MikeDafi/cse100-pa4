@@ -8,6 +8,8 @@
         "*.tcc": "cpp",
         "iostream": "cpp",
         "sstream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }
