@@ -37,16 +37,21 @@ class ActorGraph {
     ~ActorGraph();
     unordered_map<string, ActorNode*> getGraph();
 
+    int edgeWeight(int movieYear);
+
     string formatMovieAndYear(string movie, int year);
 
     bool checkIfActorExists(string actorName);
 
-    void buildGraph();
+    void buildGraph(bool usingMovieTraveler);
+
     vector<string> shortestUnweightedPath(string firstActor,
                                           string secondActor);
 
-    vector<string> shortestWeightedPath(string firstActor,
-                                          string secondActor);
+    vector<string> shortestWeightedPath(string firstActor, string secondActor);
+
+    ActorNode* minimumSpanningKruskal(
+        unordered_map<ActorNode*, vector<pair<ActorNode*, int>>>& result);
     // Maybe add some more methods here
 
     /** You can modify this method definition as you wish

@@ -1,7 +1,3 @@
 (actor)--[movie#@year]-->(actor)--...
-(Kevin Bacon)--[Telling Lies in America#@1997]-->(Calista Flockhart)--[Songs to Keep: Treasures of an Adirondack Folk Collector#@2018]-->(Michael Bacon)
-
-
-
-
-
+(Kevin Bacon)--[X-Men: First Class#@2011]-->(Michael Fassbender)--[Alien: Covenant#@2017]-->(Katherine Waterston)
+(Robert Downey Jr.)--[Avengers: Endgame#@2019]-->(Samuel L. Jackson)--[Glass#@2019]-->(James McAvoy)--[X-Men: First Class#@2011]-->(Kevin Bacon)

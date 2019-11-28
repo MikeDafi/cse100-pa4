@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
     } else if (*argv[2] == WEIGHTED_CHAR) {
         isWeighted = true;
     }
-    graph->buildGraph();
+    graph->buildGraph(false);
 
     vector<string> test_pairs;
     test_pairs = getTestPairs(argv[3]);

@@ -29,7 +29,10 @@ class ActorNode {
 
     // string is movie name, int is the year, vector is the connections
     unordered_map<string, unordered_map<int, vector<ActorNode*>>> edges;
-    unordered_map<ActorNode*, int> neighbors;
+    unordered_map<ActorNode*, int>
+        neighbors;  // int is the number of connections
+    unordered_map<ActorNode*, int> neighborsWeighted;  // int is weight
+    unordered_map<ActorNode*, string> movieNeighborsWeighted;
 
     /* Constructor that initialize a HCNode */
     ActorNode(string actorName, string movieName, int movieYear)
@@ -55,6 +58,23 @@ class ActorNode {
     //     stm << "[" << n.count << "," << (int)(n.symbol) << "]";
     //     return stm;
     // }
+};
+
+struct WeightedPairComparator {
+    bool operator()(const pair<pair<ActorNode*, ActorNode*>, int>& lhs,
+                    const pair<pair<ActorNode*, ActorNode*>, int>& rhs) const {
+        if (lhs.second != rhs.second) {
+            return rhs.second < lhs.second;
+        }
+
+        // if (rhs->nameOfActor.length() == lhs->nameOfActor.length()) {
+        if (rhs.first.first->nameOfActor.compare(
+                lhs.first.first->nameOfConnector) > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 };
 
 struct WeightedComparator {

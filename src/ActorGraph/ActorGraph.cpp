@@ -22,6 +22,8 @@
 
 using namespace std;
 
+typedef pair<pair<ActorNode*, ActorNode*>, int> nodePair;
+
 /**
  * Constructor of the Actor graph
  */
@@ -40,7 +42,83 @@ bool ActorGraph::checkIfActorExists(string actorName) {
     return false;
 }
 
-void ActorGraph::buildGraph() {
+ActorNode* ActorGraph::minimumSpanningKruskal(
+    unordered_map<ActorNode*, vector<pair<ActorNode*, int>>>& result) {
+    priority_queue<nodePair, vector<nodePair>, WeightedPairComparator>
+        kruskalQueue;
+
+    for (auto graphIterator = graph.begin(); graphIterator != graph.end();
+         graphIterator++) {
+        ActorNode* currentNode = graphIterator->second;
+        for (auto neighborIterator = currentNode->neighborsWeighted.begin();
+             neighborIterator != currentNode->neighborsWeighted.end();
+             neighborIterator++) {
+            kruskalQueue.push(
+                make_pair(make_pair(currentNode, neighborIterator->first),
+                          neighborIterator->second));
+        }
+    }
+    unordered_map<ActorNode*, ActorNode*> upTree;
+    for (auto element : graph) {
+        upTree[element.second] = NULL;
+    }
+
+    ActorNode* root = NULL;
+    while (!kruskalQueue.empty()) {
+        nodePair current = kruskalQueue.top();
+        kruskalQueue.pop();
+        ActorNode* secondNode = current.first.second;
+        ActorNode* firstNode = current.first.first;
+        if (upTree[firstNode] == NULL && upTree[secondNode] == NULL) {
+            upTree[secondNode] = firstNode;
+            upTree[firstNode] = firstNode;
+            root = firstNode;
+            result[firstNode].push_back(make_pair(secondNode, current.second));
+            continue;
+        } else {
+            int secondNodeCount = 1;
+            int firstNodeCount = 1;
+            ActorNode* copyOfFirst = current.first.first;
+            ActorNode* copyOfSecond = current.first.second;
+            vector<ActorNode*> nodesOnPath;
+            while (upTree[secondNode] != secondNode) {
+                nodesOnPath.push_back(secondNode);
+                if (upTree[secondNode] == NULL) break;
+                secondNode = upTree[secondNode];
+                secondNodeCount++;
+            }
+            for (auto element : nodesOnPath) {
+                upTree[element] = secondNode;
+            }
+            vector<ActorNode*> nodesOnPath2;
+            while (upTree[firstNode] != firstNode) {
+                nodesOnPath.push_back(firstNode);
+                if (upTree[firstNode] == NULL) break;
+                firstNode = upTree[firstNode];
+                firstNodeCount++;
+            }
+
+            for (auto element : nodesOnPath2) {
+                upTree[element] = firstNode;
+            }
+
+            if (secondNode != firstNode) {
+                if (secondNodeCount > firstNodeCount) {
+                    upTree[firstNode] = secondNode;
+                    root = secondNode;
+                } else {
+                    upTree[secondNode] = firstNode;
+                    root = firstNode;
+                }
+
+                result[copyOfFirst].push_back(
+                    make_pair(copyOfSecond, current.second));
+            }
+        }
+    }
+}
+
+void ActorGraph::buildGraph(bool usingMovieTraveler) {
     for (auto movieIterator = movies.begin(); movieIterator != movies.end();
          movieIterator++) {
         for (auto yearIterator = movieIterator->second.begin();
@@ -53,6 +131,8 @@ void ActorGraph::buildGraph() {
             }
             string movieTitle = movieIterator->first;
             int year = yearIterator->first;
+            int movieWeight = edgeWeight(year);
+
             while (left != actors.size() - 1) {
                 if (actors.at(left)->edges[movieTitle][year].at(0) == NULL) {
                     actors.at(left)->edges[movieTitle][year].pop_back();
@@ -66,18 +146,60 @@ void ActorGraph::buildGraph() {
                 actors.at(right)->edges[movieTitle][year].push_back(
                     actors[left]);
 
-                if (actors.at(left)->neighbors.find(actors.at(right)) ==
-                    actors.at(left)->neighbors.end()) {
+                bool rightNeighborOfLeftExists =
+                    actors.at(left)->neighbors.find(actors.at(right)) ==
+                            actors.at(left)->neighbors.end()
+                        ? false
+                        : true;
+
+                bool leftNeighborOfRightExists =
+                    actors.at(right)->neighbors.find(actors.at(left)) ==
+                            actors.at(right)->neighbors.end()
+                        ? false
+                        : true;
+
+                if (rightNeighborOfLeftExists) {
                     actors.at(left)->neighbors[actors.at(right)] = 1;
                 } else {
                     actors.at(left)->neighbors[actors.at(right)] += 1;
                 }
-                if (actors.at(right)->neighbors.find(actors.at(left)) ==
-                    actors.at(right)->neighbors.end()) {
+                if (leftNeighborOfRightExists) {
                     actors.at(right)->neighbors[actors.at(left)] = 1;
                 } else {
                     actors.at(right)->neighbors[actors.at(left)] += 1;
                 }
+
+                if (usingMovieTraveler) {
+                    if (!rightNeighborOfLeftExists) {
+                        actors.at(left)->neighborsWeighted[actors.at(right)] =
+                            movieWeight;
+                        actors.at(left)
+                            ->movieNeighborsWeighted[actors.at(right)] =
+                            formatMovieAndYear(movieTitle, year);
+                    } else {
+                        if (actors.at(left)
+                                ->neighborsWeighted[actors.at(right)] >
+                            movieWeight) {
+                            actors.at(left)
+                                ->neighborsWeighted[actors.at(right)] =
+                                movieWeight;
+                        }
+                    }
+                    // if (leftNeighborOfRightExists) {
+                    //     actors.at(right)->neighborsWeighted[actors.at(left)]
+                    //     =
+                    //         movieWeight;
+                    // } else {
+                    //     if (actors.at(right)
+                    //             ->neighborsWeighted[actors.at(left)] >
+                    //         movieWeight) {
+                    //         actors.at(right)
+                    //             ->neighborsWeighted[actors.at(left)] =
+                    //             movieWeight;
+                    //     }
+                    // }
+                }
+
                 if (actors.size() - 1 == right) {
                     left++;
                     right = left + 1;
@@ -94,7 +216,7 @@ string ActorGraph::formatMovieAndYear(string movie, int year) {
            to_string(year) + MOVIE_RIGHT_BRACKET;
 }
 
-int edgeWeight(int movieYear) { return 2019 - movieYear + 1; }
+int ActorGraph::edgeWeight(int movieYear) { return 2019 - movieYear + 1; }
 
 vector<string> ActorGraph::shortestWeightedPath(string firstActor,
                                                 string secondActor) {
@@ -199,28 +321,28 @@ vector<string> ActorGraph::shortestUnweightedPath(string firstActor,
                     if (adj == NULL) {
                         break;
                     }
+
                     if (adj->dist == INT_MAX) {
                         nodesTouched.push_back(adj);
                         adj->dist = curr->dist + 1;
                         adj->prev = curr;
                         adj->nameOfConnector = formatMovieAndYear(
                             movieNameIterator->first, yearIterator->first);
-
-                        if (adj->nameOfActor == secondActor) {
-                            for (int i = adj->dist; i >= 1; i--) {
-                                path.push_back(adj->nameOfActor);
-                                path.push_back(adj->nameOfConnector);
-                                adj = adj->prev;
-                            }
-                            path.push_back(adj->nameOfActor);
-                            for (unsigned int i = 0; i < nodesTouched.size();
-                                 i++) {
-                                nodesTouched.at(i)->dist = INT_MAX;
-                            }
-                            return path;
-                        }
-
                         bfsQueue.push(adj);
+                    }
+                    if (adj->nameOfActor == secondActor) {
+                        for (int i = adj->dist; i >= 1; i--) {
+                            path.push_back(adj->nameOfActor);
+                            path.push_back(adj->nameOfConnector);
+                            adj = adj->prev;
+                        }
+                        path.push_back(adj->nameOfActor);
+                        for (unsigned int i = 0; i < nodesTouched.size(); i++) {
+                            nodesTouched.at(i)->dist = INT_MAX;
+                        }
+                        adj->dist = INT_MAX;
+                        start->dist = INT_MAX;
+                        return path;
                     }
                 }
             }
@@ -229,6 +351,7 @@ vector<string> ActorGraph::shortestUnweightedPath(string firstActor,
     for (unsigned int i = 0; i < nodesTouched.size(); i++) {
         nodesTouched.at(i)->dist = INT_MAX;
     }
+    start->dist = INT_MAX;
     return path;
 }
 /** You can modify this method definition as you wish

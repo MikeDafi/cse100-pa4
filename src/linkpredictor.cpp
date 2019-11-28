@@ -70,17 +70,6 @@ string formatActor(string actorName) {
     return ACTOR_LEFT_BRACKET + actorName + ACTOR_RIGHT_BRACKET;
 }
 
-void findShortestPaths(const char* outFileName, vector<string> test_pairs,
-                       ActorGraph* graph, bool useWeighted) {
-    string header = "(actor)--[movie#@year]-->(actor)--...";
-    remove(outFileName);
-    ofstream outFile;
-    outFile.open(outFileName);
-    outFile << header << endl;
-
-    outFile.close();
-}
-
 void predictFromPast(const char* outFileName, ActorGraph* list,
                      vector<string> listOfActors) {
     string header = "Actor1,Actor2,Actor3,Actor4";
@@ -247,7 +236,7 @@ int main(int argc, char** argv) {
     }
     ActorGraph* graph = new ActorGraph();
     graph->loadFromFile(argv[1], false);
-    graph->buildGraph();
+    graph->buildGraph(false);
 
     vector<string> listOfActors;
     listOfActors = getListOfActors(argv[2]);
