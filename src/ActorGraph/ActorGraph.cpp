@@ -131,7 +131,6 @@ void ActorGraph::buildGraph(bool usingMovieTraveler) {
             }
             string movieTitle = movieIterator->first;
             int year = yearIterator->first;
-            int movieWeight = edgeWeight(year);
 
             while (left != actors.size() - 1) {
                 if (actors.at(left)->edges[movieTitle][year].at(0) == NULL) {
@@ -146,6 +145,13 @@ void ActorGraph::buildGraph(bool usingMovieTraveler) {
                 actors.at(right)->edges[movieTitle][year].push_back(
                     actors[left]);
 
+                actors.at(left)->neighbors[actors.at(right)] += 1;
+
+                actors.at(right)->neighbors[actors.at(left)] += 1;
+                
+
+                if (usingMovieTraveler) {
+                int movieWeight = edgeWeight(year);
                 bool rightNeighborOfLeftExists =
                     actors.at(left)->neighbors.find(actors.at(right)) ==
                             actors.at(left)->neighbors.end()
@@ -158,18 +164,6 @@ void ActorGraph::buildGraph(bool usingMovieTraveler) {
                         ? false
                         : true;
 
-                if (rightNeighborOfLeftExists) {
-                    actors.at(left)->neighbors[actors.at(right)] = 1;
-                } else {
-                    actors.at(left)->neighbors[actors.at(right)] += 1;
-                }
-                if (leftNeighborOfRightExists) {
-                    actors.at(right)->neighbors[actors.at(left)] = 1;
-                } else {
-                    actors.at(right)->neighbors[actors.at(left)] += 1;
-                }
-
-                if (usingMovieTraveler) {
                     if (!rightNeighborOfLeftExists) {
                         actors.at(left)->neighborsWeighted[actors.at(right)] =
                             movieWeight;
