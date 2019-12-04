@@ -1,11 +1,15 @@
 /**
+ * ActorNode.hpp
  * Author: Michael Askndafi
+ * Date: 11/30/2019
  * Email: maskndaf@ucsd.edu
- * Description:
+ *
+ * Description: Each actor has a node that stores it's neighbors, connections,
+ * properities when finding the shortest path and more.
  * Sources:Piazza
  */
-#ifndef HCNODE_HPP
-#define HCNODE_HPP
+#ifndef ACTORNODE_HPP
+#define ACTORNODE_HPP
 
 #include <bits/stdc++.h>
 #include <iostream>
@@ -14,18 +18,17 @@
 
 using namespace std;
 
-/** A class, instances of which are nodes in an HCTree.
+/**
+ * A class, instances of which are nodes in an ActorGraph
  */
 class ActorNode {
   public:
-    // a map to a map of the movie name and year that maps to every actor that
-    // it can
-    string nameOfActor;
-    int dist;
-    ActorNode* prev;
-    bool done;
-    string nameOfConnector;
-    int priority;
+    string nameOfActor;  // the name of the actor
+    int dist;            // the distance between the previous node and this
+    ActorNode* prev;     // the previous node in the sequence
+    bool done;           // checks if the node has had their neighbors searched
+    string nameOfConnector;  // the movie of that relates prev and this node
+    int priority;  // the priority of the node when finding shortest unweighted
 
     // string is movie name, int is the year, vector is the connections
     unordered_map<string, unordered_map<int, vector<ActorNode*>>> edges;
@@ -34,7 +37,7 @@ class ActorNode {
     unordered_map<ActorNode*, int> neighborsWeighted;  // int is weight
     unordered_map<ActorNode*, string> movieNeighborsWeighted;
 
-    /* Constructor that initialize a HCNode */
+    /* Constructor that initialize a ActorNode */
     ActorNode(string actorName, string movieName, int movieYear)
         : nameOfActor(actorName),
           dist(INT_MAX),
@@ -43,31 +46,18 @@ class ActorNode {
           priority(0) {
         edges[movieName][movieYear].push_back(0);
     }
-
-    bool checkIfMovieExists(string movie_title, int year) {
-        if (edges[movie_title][year].at(0) == 0) {
-            return false;
-        }
-        return true;
-    }
-
-    /* For printing an HCNode to an ostream. Possibly useful for debugging
-     */
-    // ostream& operator<<(ostream&, const HCNode&) __attribute__((weak));
-    // ostream& operator<<(ostream& stm, const HCNode& n) {
-    //     stm << "[" << n.count << "," << (int)(n.symbol) << "]";
-    //     return stm;
-    // }
 };
 
+// for the priority queue in kruskal's algorithm
 struct WeightedPairComparator {
     bool operator()(const pair<pair<ActorNode*, ActorNode*>, int>& lhs,
                     const pair<pair<ActorNode*, ActorNode*>, int>& rhs) const {
+        // puts the nodes that are lower count as higher priority
         if (lhs.second != rhs.second) {
             return rhs.second < lhs.second;
         }
 
-        // if (rhs->nameOfActor.length() == lhs->nameOfActor.length()) {
+        // higher alphabetization goes higher in priority
         if (rhs.first.first->nameOfActor.compare(
                 lhs.first.first->nameOfConnector) > 0) {
             return false;
@@ -77,13 +67,12 @@ struct WeightedPairComparator {
     }
 };
 
+// lower in distance, goes higher in priority, so does lower in string
 struct WeightedComparator {
     bool operator()(ActorNode*& lhs, ActorNode*& rhs) const {
         if (lhs->dist != rhs->dist) {
             return rhs->dist < lhs->dist;
         }
-
-        // if (rhs->nameOfActor.length() == lhs->nameOfActor.length()) {
         if (rhs->nameOfActor.compare(lhs->nameOfActor) > 0) {
             return false;
         } else {
@@ -92,22 +81,19 @@ struct WeightedComparator {
     }
 };
 
+// highest priority is nodes with higher priority, self explanatory,
+// or higher alphabet
 struct ActorNodePtrComp {
     bool operator()(ActorNode*& lhs, ActorNode*& rhs) const {
         if (lhs->priority != rhs->priority) {
             return lhs->priority > rhs->priority;
         }
 
-        // if (rhs->nameOfActor.length() == lhs->nameOfActor.length()) {
         if (rhs->nameOfActor.compare(lhs->nameOfActor) > 0) {
             return true;
         } else {
             return false;
         }
-        //}
-        // else {
-        //     return rhs->nameOfActor.length() < lhs->nameOfActor.length();
-        // }
     }
 };
-#endif  // HCNODE_HPP
+#endif

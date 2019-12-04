@@ -1,7 +1,9 @@
 /**
  * Author: Michael Askndafi
  * Email: maskndaf@ucsd.edu
- * Description: TODO
+ * Description: For a graph with either weighted or unweighted edges, the file
+ * will find the shortest path between two nodes. Using streams as input and
+ * output.
  * Sources: Piazza
  */
 #include <fstream>
@@ -21,8 +23,19 @@
 #define ACTOR_RIGHT_BRACKET ')'
 #define DELIMITER_BETWEEN_M_AND_Y "#@"
 #define TWO_COLUMNS 2
+#define TAB_CHAR '\t'
+
 using namespace std;
 
+/*
+ * Reads each line for the pair of actors to find, checking if the there are
+ * exactly two columns for each pair and going through the entire stream.
+ *
+ * Parameters:
+ *              in_filename - the name of the file to read from
+ *
+ * Return: the vector of actors to eventually find colloborations for.
+ */
 vector<string> getTestPairs(const char* in_filename) {
     ifstream infile(in_filename);
     vector<string> test_pairs;
@@ -50,7 +63,7 @@ vector<string> getTestPairs(const char* in_filename) {
 
             // get the next string before hitting a tab character
             // and put it in 'str'
-            if (!getline(ss, str, '\t')) break;
+            if (!getline(ss, str, TAB_CHAR)) break;
             record.push_back(str);
         }
 
@@ -66,21 +79,43 @@ vector<string> getTestPairs(const char* in_filename) {
     return test_pairs;
 }
 
+/*
+ * Formally write the way an actor should be written for the output file
+ *
+ * Parameters: actorName - the name of the actor to format
+ *
+ * Return: the newly formatted string
+ */
 string formatActor(string actorName) {
     return ACTOR_LEFT_BRACKET + actorName + ACTOR_RIGHT_BRACKET;
 }
 
+/*
+ * Description: Find the shortest paths, first checking if the must have
+ * weighted or unweighted then relying on each pair to go through Dikjstra's
+ * algorithm to find the shortest path.
+ *
+ * Parameters: outFileName - the name of the file to print the connections to
+ *             test_pairs - the pairs of actors to find connections for
+ *             graph - the pre-buildt graph that has all the nodes to search
+ *                      through
+ *             useWeighted - for telling if should care about weights of edges
+ *
+ * Return: None
+ */
 void findShortestPaths(const char* outFileName, vector<string> test_pairs,
                        ActorGraph* graph, bool useWeighted) {
+    // prints out the header
     string header = "(actor)--[movie#@year]-->(actor)--...";
     remove(outFileName);
     ofstream outFile;
     outFile.open(outFileName);
     outFile << header << endl;
 
+    // going through each pairing
     for (unsigned int i = 0; i < test_pairs.size(); i += INCREMENTOR) {
         vector<string> returnedPath;
-        bool traversor = false;
+        bool traversor = false;  // if false then print actor, else print movie
         if (useWeighted) {
             returnedPath = graph->shortestWeightedPath(test_pairs.at(i),
                                                        test_pairs.at(i + 1));
@@ -89,6 +124,7 @@ void findShortestPaths(const char* outFileName, vector<string> test_pairs,
                                                          test_pairs.at(i + 1));
         }
 
+        // print the path by going through the vector of strings
         for (int j = returnedPath.size() - 1; j >= 1; j--) {
             if (traversor) {
                 outFile << returnedPath.at(j) << MOVIE_TO_ACTOR_TRANSITION;
@@ -96,9 +132,10 @@ void findShortestPaths(const char* outFileName, vector<string> test_pairs,
                 outFile << formatActor(returnedPath.at(j))
                         << ACTOR_TO_MOVIE_TRANSITION;
             }
-            traversor = !traversor;
+            traversor = !traversor;  // alternate through movie and actor
         }
 
+        // prints out actor at the end
         if (returnedPath.size() > 1) {
             outFile << formatActor(returnedPath.at(0));
         }
@@ -108,21 +145,26 @@ void findShortestPaths(const char* outFileName, vector<string> test_pairs,
 }
 
 /*
- * Description: A terminal interface for the user to use either predict
- * completions or predict underscore.
+ * Description: Will use the parameters provided to build the graph,
+ * load the pairs, find connections between pairings and print to the
+ *  given outstream file.
  * Parameters: argc - the number of arguments there are
  *             argv - the strings given from the user
- * Return: TODO
+ * Return: -1 if unsuccessful, 0 if successful
  */
 int main(int argc, char** argv) {
     const int NUM_ARG = 5;
     if (argc != NUM_ARG) {
         return -1;
     }
+
+    // loads the movie file to create graph
     ActorGraph* graph = new ActorGraph();
     graph->loadFromFile(argv[1], false);
 
     bool isWeighted;
+
+    // checks for types of edges there are
     if (*argv[2] == UNWEIGHTED_CHAR) {
         isWeighted = false;
     } else if (*argv[2] == WEIGHTED_CHAR) {
@@ -130,10 +172,11 @@ int main(int argc, char** argv) {
     }
     graph->buildGraph(false);
 
+    // loads the pairings of the actors
     vector<string> test_pairs;
     test_pairs = getTestPairs(argv[3]);
 
     findShortestPaths(argv[4], test_pairs, graph, isWeighted);
-    delete graph;
-    return 0;
+    delete graph;  // deallocates
+    return 0;      // successful
 }
