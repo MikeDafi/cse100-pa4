@@ -1,5 +1,11 @@
 (actor)<--[movie#@year]-->(actor)
-(Samuel L. Jackson)<--[Avengers: Endgame#@2017]-->(Robert Downey Jr.)
-NODE CONNECTED: 2
-EDGE CHOSEN 1
-TOTAL EDGE WEIGHTS: 3
+(Kevin Bacon)<--[X-Men: First Class#@2011]-->(James McAvoy)
+(Katherine Waterston)<--[The Current War#@2017]-->(Michael Askndafi)
+(Samuel L. Jackson)<--[Avengers: Endgame#@2019]-->(Robert Downey Jr.)
+(Tom Holland)<--[The Current War#@2017]-->(Michael Askndafi)
+(James McAvoy)<--[Glass#@2019]-->(Samuel L. Jackson)
+(Robert Downey Jr.)<--[Spider-Man: Homecoming#@2017]-->(Tom Holland)
+(Michael Fassbender)<--[Alien: Covenant#@2017]-->(Katherine Waterston)
+#NODE CONNECTED: 8
+#EDGE CHOSEN: 7
+TOTAL EDGE WEIGHTS: 23

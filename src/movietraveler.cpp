@@ -99,8 +99,8 @@ void printMovieTraveler(
         }
     }
 
-    outFile << "NODE CONNECTED: " << nodesUsed + 1 << endl;
-    outFile << "EDGE CHOSEN " << nodesUsed << endl;
+    outFile << "#NODE CONNECTED: " << nodesUsed + 1 << endl;
+    outFile << "#EDGE CHOSEN: " << nodesUsed << endl;
     outFile << "TOTAL EDGE WEIGHTS: " << weight << endl;
 }
 
