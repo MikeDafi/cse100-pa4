@@ -66,12 +66,21 @@ void printMovieTraveler(
     // the two actors in each connection
     ActorNode* firstNode;
     ActorNode* secondNode;
+
+    int weight = 0;
+    int nodesUsed = 0;
+    for(auto element : result){
+        for(auto innerElement : element.second){
+            nodesUsed++;
+        }
+    }
  
     // goes through each actor's all possible connections
     for (auto iterator = result.begin(); iterator != result.end(); iterator++) {
         firstNode = iterator->first;
         for (int i = 0; i < iterator->second.size(); i++) {
             secondNode = iterator->second.at(i).first;
+            weight += iterator->second.at(i).second;
 
             outFile << formatActor(firstNode->nameOfActor)
                     << ACTOR_TO_MOVIE_TRANSITION;
@@ -89,6 +98,10 @@ void printMovieTraveler(
             outFile << formatActor(secondNode->nameOfActor) << endl;
         }
     }
+
+    outFile << "NODE CONNECTED: " << nodesUsed + 1 << endl;
+    outFile << "EDGE CHOSEN " << nodesUsed << endl;
+    outFile << "TOTAL EDGE WEIGHTS: " << weight << endl;
 }
 
 /*
