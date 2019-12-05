@@ -1,8 +1,5 @@
-(actor)--[movie#@year]-->(actor)--...
-
-(N. Paul Stookey)--[Songs to Keep: Treasures of an Adirondack Folk Collector#@2013]-->(Kevin Bacon)
-(Robert Downey Jr.)--[I Am Steve McQueen#@2014]-->(Zoe Bell)--[Death Proof#@2007]-->(Kurt Russell)--[Dreamer: Inspired by a True Story#@2005]-->(Kris Kristofferson)--[Harry Dean Stanton: Partly Fiction#@2012]-->(David Lynch)--[Rooted in Peace#@2016]-->(Pete Seeger)--[The Power of Their Song: The Untold Story of Latin America's New Song Movement#@2008]-->(Robert De Cormier)
-
-(Robert Downey Jr.)--[The Singing Detective#@2003]-->(Robin Wright)--[The Conspirator#@2010]-->(James McAvoy)--[It Chapter Two#@2019]-->(Bill Skarsgard)--[Villains#@2019]-->(Kyra Sedgwick)--[Loverboy#@2005]-->(Kevin Bacon)
-(Robert Downey Jr.)--[The Singing Detective#@2003]-->(Robin Wright)--[The Conspirator#@2010]-->(James McAvoy)--[It Chapter Two#@2019]-->(Bill Skarsgard)--[Villains#@2019]-->(Kyra Sedgwick)--[Loverboy#@2005]-->(Kevin Bacon)
-(Johnny Pacheco)--[Yo soy la Salsa#@2014]-->(Ruben Blades)--[Imagining Argentina#@2003]-->(Emma Thompson)
+(actor)<--[movie#@year]-->(actor)
+(Samuel L. Jackson)<--[Avengers: Endgame#@2017]-->(Robert Downey Jr.)
+#NODE CONNECTED: 2
+#EDGE CHOSEN: 1
+TOTAL EDGE WEIGHTS: 3

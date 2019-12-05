@@ -13,7 +13,7 @@
 #include "ActorGraph.cpp"
 #include "ActorNode.hpp"
 
-#define ACTOR_TO_MOVIE_TRANSITION "--"
+#define ACTOR_TO_MOVIE_TRANSITION "<--"
 #define MOVIE_TO_ACTOR_TRANSITION "-->"
 #define MOVIE_LEFT_BRACKET '['
 #define MOVIE_RIGHT_BRACKET ']'
@@ -119,7 +119,7 @@ void minimumSpanningTree(const char* outFileName, ActorGraph*& graph) {
     graph->minimumSpanningKruskal(result);
 
     // header for the file
-    string header = "(actor)--[movie#@year]-->(actor)--...";
+    string header = "(actor)<--[movie#@year]-->(actor)";
     remove(outFileName);
     ofstream outFile;
     outFile.open(outFileName);
