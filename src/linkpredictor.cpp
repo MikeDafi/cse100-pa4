@@ -310,17 +310,16 @@ int main(int argc, char** argv) {
     if (argc != NUM_ARG) {
         return -1;
     }
-    ActorGraph* graph = new ActorGraph();
-    graph->loadFromFile(argv[1], false);
-    graph->buildGraph(false);
+    ActorGraph graph;
+    graph.loadFromFile(argv[1], false);
+    graph.buildGraph(false);
 
     vector<string> listOfActors;
     listOfActors = getListOfActors(argv[TEST_ACTORS_FILE]);
 
-    predictFromPast(argv[OUT_FILE_PAST_PREDICTIONS], graph, listOfActors);
+    predictFromPast(argv[OUT_FILE_PAST_PREDICTIONS], &graph, listOfActors);
 
-    predictNew(argv[OUT_FILE_FUTURE_PREDICTIONS], graph, listOfActors);
+    predictNew(argv[OUT_FILE_FUTURE_PREDICTIONS], &graph, listOfActors);
 
-    delete graph;  // deallocate memory
     return 0;
 }

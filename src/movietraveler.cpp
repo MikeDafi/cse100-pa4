@@ -69,12 +69,12 @@ void printMovieTraveler(
 
     int weight = 0;
     int nodesUsed = 0;
-    for(auto element : result){
-        for(auto innerElement : element.second){
+    for (auto element : result) {
+        for (auto innerElement : element.second) {
             nodesUsed++;
         }
     }
- 
+
     // goes through each actor's all possible connections
     for (auto iterator = result.begin(); iterator != result.end(); iterator++) {
         firstNode = iterator->first;
@@ -114,7 +114,7 @@ void printMovieTraveler(
  *
  * Return: None
  */
-void minimumSpanningTree(const char* outFileName, ActorGraph*& graph) {
+void minimumSpanningTree(const char* outFileName, ActorGraph* graph) {
     unordered_map<ActorNode*, vector<pair<ActorNode*, int>>> result;
     graph->minimumSpanningKruskal(result);
 
@@ -143,12 +143,11 @@ int main(int argc, char** argv) {
     if (argc != NUM_ARG) {
         return -1;
     }
-    ActorGraph* graph = new ActorGraph();
-    graph->loadFromFile(argv[1], false);
-    graph->buildGraph(true);
+    ActorGraph graph;
+    graph.loadFromFile(argv[1], false);
+    graph.buildGraph(true);
 
-    minimumSpanningTree(argv[OUTPUT_FILE_ARG], graph);
+    minimumSpanningTree(argv[OUTPUT_FILE_ARG], &graph);
 
-    delete graph;
     return 0;
 }

@@ -159,8 +159,8 @@ int main(int argc, char** argv) {
     }
 
     // loads the movie file to create graph
-    ActorGraph* graph = new ActorGraph();
-    graph->loadFromFile(argv[1], false);
+    ActorGraph graph;
+    graph.loadFromFile(argv[1], false);
 
     bool isWeighted;
 
@@ -170,13 +170,12 @@ int main(int argc, char** argv) {
     } else if (*argv[2] == WEIGHTED_CHAR) {
         isWeighted = true;
     }
-    graph->buildGraph(false);
+    graph.buildGraph(false);
 
     // loads the pairings of the actors
     vector<string> test_pairs;
     test_pairs = getTestPairs(argv[3]);
 
-    findShortestPaths(argv[4], test_pairs, graph, isWeighted);
-    delete graph;  // deallocates
-    return 0;      // successful
+    findShortestPaths(argv[4], test_pairs, &graph, isWeighted);
+    return 0;  // successful
 }
